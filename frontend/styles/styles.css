@@ -18,13 +18,6 @@
 }
 
 
-.featureCategory {
-
-display: grid;
-grid-column: 2 / 2;
-
-}
-
 
 button {
 
@@ -35,7 +28,20 @@ button {
 
 }
 
+.featureWrapper {
 
+  padding: 2vw;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1vw;
+}
+
+
+.featureCategory {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 .form-input,.form-textarea,.form-select,.form-multiselect {
   -webkit-appearance: none;
