@@ -19,13 +19,14 @@ require(__DIR__ . "/backend/vendor/autoload.php");
 
 <body>
 
+
     <form action="/backend/booking.php" method="post" class="booking">
 
         <label for="guestId" class="block mt-3">Your name (guest_id)</label>
         <input type="text" name="guestId" class="form-input" required="">
 
         <label for="transferCode" class="block mt-3">transferCode</label>
-        <input type="text" name="transferCode" class="form-input">
+        <input type="text" name="transferCode" class="form-input" required="">
 
 
         <label for="arrival" class="block mt-3">Arrival</label>
@@ -45,32 +46,105 @@ require(__DIR__ . "/backend/vendor/autoload.php");
         <br>
         <label for="features" class="block mt-6">Features</label>
 
-        <div class="featureCategory">
-            <p>Water</p>
+        <section class="featureWrapper">
+            <div class="featureCategory">
+                <p>Water</p>
 
-            <label class="block ml-2">
-                <input class="mr-2" type="checkbox" name="features[]" value="">
-                Pool (Economy, $0.5)
-            </label>
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="1">
+                    Pool (Economy, $0.5)
+                </label>
 
-            <label class="block ml-2">
-                <input class="mr-2" type="checkbox" name="features[]" value="">
-                Scuba Diving (Basic, $1)
-            </label>
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="2">
+                    Scuba Diving (Basic, $1)
+                </label>
 
-            <label class="block ml-2">
-                <input class="mr-2" type="checkbox" name="features[]" value="">
-                Olympic Pool (Premium, $1.5)
-            </label>
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="3">
+                    Olympic Pool (Premium, $1.5)
+                </label>
 
-            <label class="block ml-2">
-                <input class="mr-2" type="checkbox" name="features[]" value="">
-                waterpark with fire and minibar (superior, $2)
-            </label>
-        </div>
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="4">
+                    waterpark with fire and minibar (superior, $2)
+                </label>
+            </div>
+            <div class="featureCategory">
+                <p>Games</p>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="5">
+                    Yahtzee (Economy, $0.5)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="6">
+                    Ping pong table (Basic, $1)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="7">
+                    PS5 (Premium, $1.5)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="8">
+                    Casino (superior, $2)
+                </label>
+            </div>
+            <div class="featureCategory">
+                <p>Wheels</p>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="9">
+                    Unicycle (Economy, $0.5)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="10">
+                    Bicycle (Basic, $1)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="11">
+                    Trike (Premium, $1.5)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="12">
+                    Four-wheeled motorized beast (superior, $2)
+                </label>
+            </div>
+            <div class="featureCategory">
+                <p>Hotel-specific</p>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="13">
+                    Carpet (Economy, $0.5)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="14">
+                    Good Dog (Basic, $1)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="15">
+                    Fireplace (Premium, $1.5)
+                </label>
+
+                <label class="block ml-2">
+                    <input class="mr-2" type="checkbox" name="features[]" value="16">
+                    Butler (superior, $2)
+                </label>
+            </div>
+        </section>
 
 
         <button name="submit" type="submit">Book your visit now!</button>
+
+
 
 
 
