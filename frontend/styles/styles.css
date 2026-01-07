@@ -6,6 +6,13 @@
   font-family: ;
 }
 
+h2, h3, p {
+
+    font-family: "Notable", sans-serif;
+
+}
+
+
 html, body {
     margin: 0;
     padding: 0;
@@ -32,6 +39,7 @@ html, body {
 #hotel svg {
     width: 100%;
     height: 100%;
+    transform: translateY(-10%);
     display: block;
     preserveAspectRatio: xMidYMid meet;
 }
@@ -118,3 +126,84 @@ font-size: 1.1rem;
 }
 
 
+.room {
+  display: flex;
+  justify-content: space-between;
+  background: #f9b457;
+  border-radius: 16px;
+  width: 100%;
+  gap: rem;
+}
+
+.room_type {
+  align-items: start;
+  padding: 1rem;
+
+
+
+}
+
+.room-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.room-option input {
+  margin-right: 1rem;
+}
+
+.room-description {
+  margin-top: 1rem;
+  font-style: italic;
+    white-space: pre-line;
+
+}
+
+
+
+/*------CALENDAR---------- */
+
+.calendarWrapper {
+padding: 1rem;
+margin-bottom: 20px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+
+}
+
+
+.calendar {
+    /* padding: 1rem; */
+}
+
+
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.4rem;
+}
+
+.calendar-day {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    font-size: 0.9rem;
+    padding: 3px;
+    background: #e6d5b8; /* available */
+    color: #174143;
+}
+
+.calendar-day.unavailable {
+    background: #b94a48;
+    color: #fff;
+}
+
+.calendar-day.empty {
+    visibility: hidden;
+}
