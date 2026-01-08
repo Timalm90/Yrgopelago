@@ -45,7 +45,9 @@ if ($end <= $start) {
 }
 
 $nights = (int)$start->diff($end)->days;
-if ($nights < 1) $nights = 1;
+if ($nights < 1) {
+    $nights = 1;
+}
 
 /* =======================
    OVERLAP CHECK
@@ -57,8 +59,8 @@ $stmt = $db->prepare("
       AND departure_date > :arrival
 ");
 $stmt->execute([
-    ':room' => $roomId,
-    ':arrival' => $arrival,
+    ':room'      => $roomId,
+    ':arrival'   => $arrival,
     ':departure' => $departure,
 ]);
 
@@ -70,55 +72,71 @@ if ((int)$stmt->fetchColumn() > 0) {
 /* =======================
    ROOM PRICE
 ======================= */
-$stmt = $db->prepare('SELECT tier, price_per_night FROM rooms WHERE id = :id');
+$stmt = $db->prepare("
+    SELECT tier, price_per_night
+    FROM rooms
+    WHERE id = :id
+");
 $stmt->execute([':id' => $roomId]);
 $room = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$bankAmount = $room['price_per_night'] * $nights;
+$bankAmount = (float)$room['price_per_night'] * $nights;
 $finalPrice = $bankAmount;
 
 /* =======================
-   FEATURES 
+   FEATURES
 ======================= */
 $featureNames = [];
 
-if ($features) {
-    $in = implode(',', array_fill(0, count($features), '?'));
+if (!empty($features)) {
+    $placeholders = implode(',', array_fill(0, count($features), '?'));
+
     $stmt = $db->prepare("
         SELECT id, feature_name, price
         FROM features
-        WHERE id IN ($in)
+        WHERE id IN ($placeholders)
     ");
     $stmt->execute(array_map('intval', $features));
 
-    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $f) {
-        $finalPrice += (float)$f['price']; // 
-        $featureNames[] = $f['feature_name'];
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $feature) {
+        $finalPrice += (float)$feature['price'];
+        $featureNames[] = $feature['feature_name'];
     }
 }
 
 /* =======================
-    DISCOUNT
+   GUEST / DISCOUNT
 ======================= */
-$stmt = $db->prepare('SELECT id, visits FROM guests WHERE name = :n');
-$stmt->execute([':n' => $guestName]);
+$stmt = $db->prepare("
+    SELECT id, visits
+    FROM guests
+    WHERE name = :name
+");
+$stmt->execute([':name' => $guestName]);
 $guest = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$discount = 0;
+$discount = 0.0;
 
 if ($guest) {
     $guestId = (int)$guest['id'];
     $visits  = (int)$guest['visits'];
-    $db->prepare('UPDATE guests SET visits = visits + 1 WHERE id = :i')
-        ->execute([':i' => $guestId]);
 
     if ($visits >= 1) {
-        $discount = $finalPrice * 0.1;
+        $discount = $finalPrice * 0.10;
         $finalPrice -= $discount;
     }
+
+    $db->prepare("
+        UPDATE guests
+        SET visits = visits + 1
+        WHERE id = :id
+    ")->execute([':id' => $guestId]);
 } else {
-    $db->prepare('INSERT INTO guests (name, visits) VALUES (:n,1)')
-        ->execute([':n' => $guestName]);
+    $db->prepare("
+        INSERT INTO guests (name, visits)
+        VALUES (:name, 1)
+    ")->execute([':name' => $guestName]);
+
     $guestId = (int)$db->lastInsertId();
 }
 
@@ -138,16 +156,35 @@ if (!$bank->validateTransfer($transferCode, $bankAmount)) {
 $stmt = $db->prepare("
     INSERT INTO bookings
     (room_id, guest_id, arrival_date, departure_date, transfer_code, price, creation_time)
-    VALUES (:room,:guest,:arrival,:departure,:code,:price,DATE('now'))
+    VALUES (:room, :guest, :arrival, :departure, :code, :price, DATE('now'))
 ");
 $stmt->execute([
-    ':room' => $roomId,
-    ':guest' => $guestId,
-    ':arrival' => $arrival,
+    ':room'      => $roomId,
+    ':guest'     => $guestId,
+    ':arrival'   => $arrival,
     ':departure' => $departure,
-    ':code' => $transferCode,
-    ':price' => round($finalPrice, 2),
+    ':code'      => $transferCode,
+    ':price'     => round($finalPrice, 2),
 ]);
+
+$bookingId = (int)$db->lastInsertId();
+
+/* =======================
+   SAVE BOOKING FEATURES
+======================= */
+if (!empty($features)) {
+    $stmt = $db->prepare("
+        INSERT INTO bookings_features (booking_id, feature_id)
+        VALUES (:booking, :feature)
+    ");
+
+    foreach ($features as $featureId) {
+        $stmt->execute([
+            ':booking' => $bookingId,
+            ':feature' => (int)$featureId,
+        ]);
+    }
+}
 
 /* =======================
    DEPOSIT

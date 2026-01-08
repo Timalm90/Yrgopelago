@@ -26,13 +26,9 @@ class CentralBankService
         ]);
     }
 
-    /**
-     * Validate transfer code
-     * IMPORTANT:
-     *  - NO user
-     *  - NO api_key
-     *  - EXACT amount
-     */
+    /*
+      Validate transfer code
+    */
     public function validateTransfer(string $transferCode, float $amount): bool
     {
         try {
@@ -50,8 +46,8 @@ class CentralBankService
         }
     }
 
-    /**
-     * Deposit (consumes transfer code)
+    /*
+      Deposit (consumes transfer code)
      */
     public function deposit(string $transferCode): bool
     {

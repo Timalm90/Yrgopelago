@@ -65,17 +65,18 @@ require __DIR__ . '/loadData.php';
                         <div class="calendar-grid" id="calendarGrid"></div>
                     </div>
 
-                    <label>Arrival</label>
+                    <label>Arrival </label>
                     <input type="date" name="arrival"
                         value="<?= htmlspecialchars($old['arrival'] ?? '') ?>"
                         min="2026-01-01" max="2026-01-31" required>
 
-                    <label>Departure</label>
+                    <label>Departure </label>
                     <input type="date" name="departure"
                         value="<?= htmlspecialchars($old['departure'] ?? '') ?>"
                         min="2026-01-02" max="2026-02-01" required>
-                </div>
+                    <p class="checkInOut">Check-in 15:00 <br> Check-out 11:00</p>
 
+                </div>
             </div>
 
             <!-- FEATURES -->
@@ -171,15 +172,15 @@ require __DIR__ . '/loadData.php';
     </script>
 
     <script src="frontend/scripts/hotel.js"></script>
-
+    <footer>
+        <p class="textRoll">
+            <span>Returning guests get a 10% discount after checkout. &nbsp;</span>
+        </p>
+        <p class="textRoll textRoll2">
+            <span>Returning guests get a 10% discount after checkout. &nbsp;</span>
+        </p>
+    </footer>
 </body>
-<footer>
-    <p class="marquee">
-        <span>Returning guests get a 10% discount after checkout. &nbsp;</span>
-    </p>
-    <p class="marquee marquee2">
-        <span>Returning guests get a 10% discount after checkout. &nbsp;</span>
-    </p>
-</footer>
+
 
 </html>
