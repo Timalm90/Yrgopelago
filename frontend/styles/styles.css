@@ -1,6 +1,6 @@
 :root {
   --background-color: #F5E5E1;
-  --primary-color: #F9B487;
+  --primary-color: #D26600;
   --accent-color: #427A76;
   --accent-dark-color: #174143;
   --form-control-color: #174143;
@@ -11,13 +11,15 @@
 h2, h3, h4 {
 
     font-family: "Notable", sans-serif;
-
-}
+    color: white;
+    filter: drop-shadow(2px 2px 0px #452001) drop-shadow(1px 1px 3px #753500) ;
+  }
 
 p, .room-name, .feature-text {
-color: #4D1207;
+color: white;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 200;
+      filter: drop-shadow(1px 2px 0px #753500);
   
 
 }
@@ -90,7 +92,7 @@ button {
 .featureWrapper {
   
   margin-top: 1rem;
-  background: #f9b457;
+  background: var(--primary-color);
   border-radius: 16px;
   width: 100%;
   display: grid;
@@ -150,7 +152,7 @@ font-size: 1.1rem;
 .room {
   display: flex;
   justify-content: space-between;
-  background: #f9b457;
+  background: var(--primary-color);
   border-radius: 16px;
   width: 100%;
   
@@ -181,7 +183,7 @@ font-size: 1.1rem;
   margin-top: 1rem;
   font-style: italic;
     white-space: pre-line;
-    font-size: .8rem;
+    font-size: 1rem;
 
 }
 
@@ -198,7 +200,7 @@ padding: 10px;
 display: flex;
 flex-direction: column;
 justify-content: center;
-background-color: #d16600;
+background-color: #a7270d;
 
 }
 
