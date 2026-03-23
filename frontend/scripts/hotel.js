@@ -81,34 +81,6 @@ fetch('frontend/graphics/FourWalls.svg')
     });
 
 // ==================================================
-// PRICE
-// ==================================================
-let roomPrice = 0;
-let returning = false;
-
-function nights() {
-    const a = document.querySelector('[name="arrival"]').value;
-    const d = document.querySelector('[name="departure"]').value;
-    if (!a || !d) return 1;
-
-    const diff = (new Date(d) - new Date(a)) / 86400000;
-    return Math.max(1, diff);
-}
-
-function updatePrice() {
-    let total = roomPrice * nights();
-
-    document.querySelectorAll('[name="features[]"]:checked')
-        .forEach(f => total += parseFloat(f.dataset.price));
-
-    const discount = returning ? total * 0.1 : 0;
-    total -= discount;
-
-    document.getElementById('livePrice').textContent =
-        `$${total.toFixed(2)}` + (returning ? ' (10% returning guest)' : '');
-}
-
-// ==================================================
 // ROOM SELECTION
 // ==================================================
 document.querySelectorAll('[name="room"]').forEach(radio => {
@@ -145,84 +117,4 @@ document.querySelectorAll('[name="features[]"]').forEach(box => {
     });
 });
 
-// ==================================================
-// AUTO DEPARTURE (DEFAULT 1 NIGHT)
-// ==================================================
-document.querySelector('[name="arrival"]').addEventListener('change', e => {
-    const d = new Date(e.target.value);
-    d.setDate(d.getDate() + 1);
-    document.querySelector('[name="departure"]').value =
-        d.toISOString().slice(0, 10);
 
-    updatePrice();
-});
-
-document.querySelector('[name="departure"]').addEventListener('change', updatePrice);
-
-// ==================================================
-// CALENDAR
-// ==================================================
-const calendarGrid = document.getElementById('calendarGrid');
-const YEAR = 2026;
-const MONTH = 0;
-
-function renderCalendar(blockedDates = []) {
-    calendarGrid.innerHTML = '';
-
-    const firstDay = new Date(YEAR, MONTH, 1);
-    const lastDay = new Date(YEAR, MONTH + 1, 0);
-    const offset = (firstDay.getDay() + 6) % 7;
-
-    for (let i = 0; i < offset; i++) {
-        const empty = document.createElement('div');
-        empty.className = 'calendar-day empty';
-        calendarGrid.appendChild(empty);
-    }
-
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-        const dateStr = `${YEAR}-01-${String(day).padStart(2, '0')}`;
-        const el = document.createElement('div');
-        el.className = 'calendar-day';
-        el.textContent = day;
-
-        if (blockedDates.includes(dateStr)) {
-            el.classList.add('unavailable');
-        }
-
-        calendarGrid.appendChild(el);
-    }
-}
-
-async function updateCalendar(roomId) {
-    try {
-        const r = await fetch(`backend/availability.php?room_id=${roomId}`);
-        renderCalendar(await r.json());
-    } catch {
-        renderCalendar([]);
-    }
-}
-
-renderCalendar([]);
-
-// ==================================================
-// RESTORE SESSION STATE
-// ==================================================
-function restoreState() {
-    const room = document.querySelector('[name="room"]:checked');
-    if (room) {
-        roomPrice = parseFloat(room.dataset.roomPrice) || 0;
-
-        showRoomSVG(room.dataset.roomTier);
-        updateCalendar(room.value);
-
-        document.getElementById('roomDescription').textContent =
-            ROOM_DESCRIPTIONS[room.dataset.roomTier] ?? '';
-    }
-
-    const selectedExtras = Array.from(
-        document.querySelectorAll('[name="features[]"]:checked')
-    ).map(f => f.dataset.featureName);
-
-    showExtraSVG(selectedExtras);
-    updatePrice();
-}
